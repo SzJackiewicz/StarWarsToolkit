@@ -1,30 +1,53 @@
-import styled from "styled-components";
+import styled from 'styled-components'
+import { useGetPokemonByNameQuery } from '../api/Api'
+import { CircularProgress } from '@mui/material';
 
-const SingleCard = () => {
 
-    return (
-        <CardStyle>
-            <Name> Luke Skywalker </Name>
-            <Height>height: 177</Height>
-            <Mass>mass: 78</Mass>
-        </CardStyle>
-    )
+const SingleCard = ({ name, index }) => {
+  const { data: singlePokemon, isLoading } = useGetPokemonByNameQuery(index)
 
+  if (isLoading) return <CircularProgress />
+  return (
+    <CardStyle>
+      <Name>{name}</Name>
+      <Height>Height: {singlePokemon.height}</Height>
+      <Mass>Weight: {singlePokemon.weight}</Mass>
+      <AbilitiesList>
+        {singlePokemon.abilities.map((ability) => (
+          <Ability>{ability.ability.name}</Ability>
+        ))}
+      </AbilitiesList>
+    </CardStyle>
+  )
 }
 
 const CardStyle = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 220px;
-    height: 350px;
-    background-color: #282c34d1;
-    border-radius: 3px;
-    color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 180px;
+  min-height: 280px;
+  background-color: whitesmoke;
+  border-radius: 3px;
+  color: #282c34;
+  margin: 10px;
+
+  p,
+  ul {
+    font-weight: 600;
+  }
 `
 
 const Name = styled.h2``
 const Height = styled.p``
 const Mass = styled.p``
-
+const AbilitiesList = styled.ul`
+  padding: 0;
+`
+const Ability = styled.li`
+  list-style: none;
+  text-align: center;
+`
 
 export default SingleCard
