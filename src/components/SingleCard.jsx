@@ -1,19 +1,17 @@
 import styled from 'styled-components'
-import { useGetPokemonByNameQuery } from '../api/Api'
+import { useGetPokemonByNameMutation } from '../api/Api'
 import { CircularProgress } from '@mui/material';
 
 
-const SingleCard = ({ name, index }) => {
-  const { data: singlePokemon, isLoading } = useGetPokemonByNameQuery(index)
+const SingleCard = ({ name, height, weight, abilities }) => {
 
-  if (isLoading) return <CircularProgress />
   return (
     <CardStyle>
       <Name>{name}</Name>
-      <Height>Height: {singlePokemon.height}</Height>
-      <Mass>Weight: {singlePokemon.weight}</Mass>
+      <Height>Height: {height}</Height>
+      <Mass>Weight: {weight}</Mass>
       <AbilitiesList>
-        {singlePokemon.abilities.map((ability) => (
+        {abilities.map((ability) => (
           <Ability>{ability.ability.name}</Ability>
         ))}
       </AbilitiesList>

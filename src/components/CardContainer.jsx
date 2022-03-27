@@ -1,20 +1,25 @@
 import styled from 'styled-components'
 import SingleCard from './SingleCard'
-import { useGetAllPokemonsQuery } from '../api/Api'
+import { useGetAllPokemonsQuery, useGetPokemonByNameMutation } from '../api/Api'
 import { useState } from 'react'
 import { Button, Input, CircularProgress } from '@mui/material';
 
 const CardContainer = () => {
-  const { data: allPokemons, isLoading } = useGetAllPokemonsQuery()
+  //const { data: allPokemons, isLoading } = useGetAllPokemonsQuery()
+  const [getPokemonByName, { data: singlePokemon }] = useGetPokemonByNameMutation('')
 
   const [inputValue, setInputValue] = useState('')
   const [searchValue, setSearchValue] = useState('')
-  if (isLoading) return <CircularProgress />
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setSearchValue(prev => inputValue)
-    console.log(data)
+    try {
+      await getPokemonByName(inputValue)
+
+    } catch (e) {
+      console.log('error', e)
+    }
   }
 
   return (
@@ -35,9 +40,14 @@ const CardContainer = () => {
         </Button>
       </SearchContainer>
       <CardContainerStyle>
-        {allPokemons.map((pokemon, index) => (
-          <SingleCard name={pokemon.name} key={index} index={index + 1} />
-        ))}
+        {singlePokemon &&
+          <SingleCard
+            name={singlePokemon?.name}
+            height={singlePokemon?.height}
+            weight={singlePokemon?.weight}
+            abilities={singlePokemon?.abilities}
+          />
+        }
       </CardContainerStyle>
     </>
   )
